@@ -83,8 +83,8 @@ namespace SoruxBotPublishCli
             // return;
             var paths = Directory.GetFiles(_cwd!,
                     mainDll, SearchOption.AllDirectories)
-                .Where(t => t.Contains("/bin", StringComparison.CurrentCultureIgnoreCase))
-                .Where(t => t.Contains("/release", StringComparison.CurrentCultureIgnoreCase))
+                .Where(t => t.Contains("bin", StringComparison.CurrentCultureIgnoreCase))
+                .Where(t => t.Contains("release", StringComparison.CurrentCultureIgnoreCase))
                 .ToList();
             Console.WriteLine(paths.Count);
 
