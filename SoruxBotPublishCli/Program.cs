@@ -9,7 +9,7 @@ namespace SoruxBotPublishCli
     {
         private static string? _dotnetPath;
         private static string? _outputPath;
-        private const string ToolPath = "./resources/ILRepack.exe";
+        private static string? _toolPath;
         private static string? _cwd;
 
         private static void Init()
@@ -22,6 +22,7 @@ namespace SoruxBotPublishCli
             // 读取配置
             _dotnetPath = Env.GetString("SORUX_DOTNET_PATH");
             _outputPath = Env.GetString("SORUX_OUTPUT_PATH");
+            _toolPath = Env.GetString("SORUX_TOOL_PATH");
 
             if (_dotnetPath == null)
             {
@@ -34,10 +35,17 @@ namespace SoruxBotPublishCli
                 Console.WriteLine("OUTPUT_PATH is not set in .env file, using default value.");
                 _outputPath = "./out.dll";
             }
+            
+            if (_toolPath == null)
+            {
+                Console.WriteLine("TOOL_PATH is not set in .env file, using default value.");
+                _toolPath = "./resources/ILRepack.exe";
+            }
 
 
-            Console.WriteLine("DOTNET_PATH: " + _dotnetPath);
-            Console.WriteLine("OUTPUT_PATH: " + _outputPath);
+            Console.WriteLine("SORUX_DOTNET_PATH: " + _dotnetPath);
+            Console.WriteLine("SORUX_OUTPUT_PATH: " + _outputPath);
+            Console.WriteLine("SORUX_TOOL_PATH: " + _toolPath);
 
 
             // Console.WriteLine(Environment.GetEnvironmentVariable("DOTNET_PATH"));
@@ -96,7 +104,7 @@ namespace SoruxBotPublishCli
             // 创建一个新的进程
             var process = new Process();
 
-            var argumentsStr = ToolPath + " /out:" + _outputPath;
+            var argumentsStr = _toolPath + " /out:" + _outputPath;
             argumentsStr = list.Aggregate(argumentsStr, (current, dll) => current + (" " + dll));
 
             // 设置进程启动信息
