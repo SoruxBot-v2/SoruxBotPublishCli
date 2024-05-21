@@ -13,4 +13,4 @@ set "SORUX_TOOL_PATH=%SORUX_TOOL_PATH%"
 dotnet build -c Release
 
 :: 运行项目
-dotnet run "%SORUX_SCRIPT_PATH%Release\net8.0\SoruxShadeDll
+dotnet %SORUX_SCRIPT_PATH%publish\SoruxBotPublishCli.dll
