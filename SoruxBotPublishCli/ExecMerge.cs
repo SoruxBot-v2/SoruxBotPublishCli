@@ -130,8 +130,6 @@ public class ExecMerge
             Console.WriteLine(path);
         }
 
-        Console.WriteLine(paths.Count);
-
         if (paths.Count != 1)
         {
             SimpleLogger.Error("There should be only one main dll file in the directory.");
