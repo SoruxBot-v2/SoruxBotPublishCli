@@ -8,7 +8,7 @@ export SORUX_TOOL_PATH
 
 
 
-dotnet build -c Release
+dotnet publish
 
 dotnet ${SORUX_SCRIPT_PATH}/publish/SoruxBotPublishCli.dll
 
