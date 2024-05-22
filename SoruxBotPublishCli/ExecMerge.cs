@@ -30,6 +30,7 @@ public class ExecMerge
             SimpleLogger.Error(
                 "There should be only one csproj file in current working directory."
                 );
+            SimpleLogger.Error($"your csproj nums: {csprojArr.Count}");
             Environment.Exit(1);
         }
 
@@ -71,13 +72,6 @@ public class ExecMerge
         
         
         DepDllList = DllGetter.GetDllList(CsProjPath);
-
-        SimpleLogger.Info("your proj dependency dll: ");
-
-        foreach (var dll in DepDllList)
-        {
-            Console.WriteLine(" => " + dll);
-        }
     }
 
     private static void RunDotnetCommand(string argumentsStr)
@@ -140,12 +134,10 @@ public class ExecMerge
 
         if (paths.Count != 1)
         {
-            Console.WriteLine("There should be only one main dll file in the directory.");
+            SimpleLogger.Error("There should be only one main dll file in the directory.");
+            SimpleLogger.Error($"your main dll nums: {paths.Count}");
             Environment.Exit(1);
         }
-
-        SimpleLogger.Info("your mainDll path: ");
-        Console.WriteLine(" => " + paths[0]);
 
         DepDllList.Add(paths[0]);
     }
@@ -159,6 +151,12 @@ public class ExecMerge
         
         // 获取publish生成的插件DLL
         GetMainDll();
+        
+        SimpleLogger.Info("your proj dependency dll: ");
+        foreach (var dll in DepDllList)
+        {
+            Console.WriteLine(" => " + dll);
+        }
 
 
         // 通过命令行运行程序il-repack
