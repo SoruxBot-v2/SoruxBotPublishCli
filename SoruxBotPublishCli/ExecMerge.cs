@@ -18,13 +18,18 @@ public class ExecMerge
     {
         Cwd = Directory.GetCurrentDirectory();
         SimpleLogger.Info("current work dir -> " + Cwd);
+        
+        // 获取工具所在路径
+        ToolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "ILRepack.exe");
+        
         // 加载 .env 文件
         Env.Load();
 
         // 读取配置
         DotnetPath = Env.GetString("SORUX_DOTNET_PATH");
         OutputPath = Env.GetString("SORUX_OUTPUT_PATH");
-        ToolPath = Env.GetString("SORUX_TOOL_PATH");
+        
+
 
         if (DotnetPath == null)
         {
@@ -36,12 +41,6 @@ public class ExecMerge
         {
             SimpleLogger.Warning("SORUX_OUTPUT_PATH is not set, using default value.");
             OutputPath = "./out.dll";
-        }
-
-        if (ToolPath == null)
-        {
-            SimpleLogger.Warning("SORUX_TOOL_PATH is not set, using default value.");
-            ToolPath = "./resources/ILRepack.exe";
         }
 
 
@@ -127,7 +126,7 @@ public class ExecMerge
         process.ErrorDataReceived += (sender, args) =>
         {
             if (args.Data == null) return;
-            SimpleLogger.Error( args.Data);
+            SimpleLogger.Error(args.Data);
             errorFlag = true;
         };
 

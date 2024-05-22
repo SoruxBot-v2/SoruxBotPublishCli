@@ -13,4 +13,21 @@
       <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="bin\Debug\net8.0\resources\ILRepack.exe" />
+      <None Include="bin\Debug\net8.0\resources\ILRepack.runtimeconfig.json" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="resources\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="bin\Debug\net8.0\" />
+    </ItemGroup>
+
+
 </Project>
