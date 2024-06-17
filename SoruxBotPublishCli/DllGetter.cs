@@ -22,7 +22,7 @@ public static class DllGetter
 
         // 从项目对象中获取所有 PackageReference 项
         var packageReferences = project.GetItems("PackageReference")
-            .Where(sp => sp.EvaluatedInclude.ToLower() != "soruxbot.sdk");
+            .Where(sp => !sp.EvaluatedInclude.ToLower().Contains("soruxbot.sdk"));
 
         // 遍历所有 PackageReference 项
         foreach (var packageReference in packageReferences)
