@@ -4,7 +4,7 @@ using DotNetEnv;
 
 namespace SoruxBotPublishCli;
 
-public class ExecMerge
+public static class ExecMerge
 {
     private static readonly string DotnetPath;
     private static readonly string OutputPath;
