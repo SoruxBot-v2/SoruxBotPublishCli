@@ -7,12 +7,13 @@ public static class DllGetter
 {
     public static List<string> GetDllList(string csprojPath)
     {
-        // 注册 MSBuild
-        MSBuildLocator.RegisterDefaults();
-        
-        // 获取 NuGet 依赖项的 DLL 路径
-        return GetNuGetDllPaths(csprojPath);
-        
+
+        return [];
+        // // 注册 MSBuild
+        // MSBuildLocator.RegisterDefaults();
+        //
+        // // 获取 NuGet 依赖项的 DLL 路径
+        // return GetNuGetDllPaths(csprojPath);
     }
 
     private static List<string> GetNuGetDllPaths(string csprojPath)
@@ -35,22 +36,22 @@ public static class DllGetter
                 userProfile, ".nuget", "packages", packageName, packageVersion);
 
             if (!Directory.Exists(nugetPackagePath)) continue;
-            
+
             // 如果目录存在，查找其中符合条件的 DLL 文件
-            var dllFiles = 
-                Directory.GetFiles(nugetPackagePath, 
-                    "*.dll", SearchOption.AllDirectories)
-                    .Where(t => t.Contains("net6.0") || t.Contains("net8.0")||t.Contains("netstandard"))
-                    .Where(t=>t.Contains("lib"))
+            var dllFiles =
+                Directory.GetFiles(nugetPackagePath,
+                        "*.dll", SearchOption.AllDirectories)
+                    .Where(t => t.Contains("net6.0") || t.Contains("net8.0") || t.Contains("netstandard"))
+                    .Where(t => t.Contains("lib"))
                     .ToList();
-            
+
             // Console.WriteLine(dllFiles.Count);
             // foreach (var dllFile in dllFiles)
             // {
             //     Console.WriteLine(dllFile);
             //
             // }
-            
+
             dllPaths.Sort();
             if (dllFiles.Count == 0) continue;
             dllPaths.Add(dllFiles[0]);
@@ -59,4 +60,3 @@ public static class DllGetter
         return dllPaths;
     }
 }
-
