@@ -14,13 +14,14 @@ public class ExecMerge
     private static readonly List<string> DepDllList;
     private static bool _errorFlag = false;
 
+    private static string _binPath = "";
+
     static ExecMerge()
     {
-        
         // 打印当前工作目录
         Cwd = Directory.GetCurrentDirectory();
         SimpleLogger.Info("current work dir -> " + Cwd);
-        
+
         // 查看目录下是否由csproj文件，
         var csprojArr = Directory.GetFiles(Cwd,
             "*.csproj", SearchOption.TopDirectoryOnly).ToList();
@@ -29,27 +30,27 @@ public class ExecMerge
         {
             SimpleLogger.Error(
                 "There should be only one csproj file in current working directory."
-                );
+            );
             SimpleLogger.Error($"your csproj nums: {csprojArr.Count}");
             Environment.Exit(1);
         }
 
         CsProjPath = csprojArr[0];
         SimpleLogger.Info("find proj: " + CsProjPath);
-        
+
         // 获取工具所在路径
         ToolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "ILRepack.exe");
-        
+
         // Console.WriteLine(Environment.GetEnvironmentVariable("DOTNET_PATH"));
-        
+
         // 加载 .env 文件
         Env.Load();
 
         // 读取配置
         DotnetPath = Env.GetString("SORUX_DOTNET_PATH");
         OutputPath = Env.GetString("SORUX_OUTPUT_PATH");
-        
-        
+
+
         if (DotnetPath == null)
         {
             SimpleLogger.Warning("SORUX_DOTNET_PATH is not set, using default value.");
@@ -59,18 +60,17 @@ public class ExecMerge
         if (OutputPath == null)
         {
             SimpleLogger.Warning("SORUX_OUTPUT_PATH is not set, using default value.");
-           
-            OutputPath = Path.Combine(Cwd, "plugin",  
-                Constants.OutputDllPrefix+
+
+            OutputPath = Path.Combine(Cwd, "plugin",
+                Constants.OutputDllPrefix +
                 Path.GetFileName(CsProjPath).Replace(".csproj", ".dll"));
         }
 
 
         SimpleLogger.Info("SORUX_DOTNET_PATH: " + DotnetPath);
         SimpleLogger.Info("SORUX_OUTPUT_PATH: " + OutputPath);
-        
-        
-        
+
+
         DepDllList = DllGetter.GetDllList(CsProjPath);
     }
 
@@ -137,6 +137,8 @@ public class ExecMerge
             Environment.Exit(1);
         }
 
+        _binPath = Path.GetDirectoryName(paths[0])!;
+
         DepDllList.Add(paths[0]);
     }
 
@@ -145,11 +147,11 @@ public class ExecMerge
         // 构建项目
         SimpleLogger.Info("starting dotnet building...");
         RunDotnetCommand("publish");
-        
-        
+
+
         // 获取publish生成的插件DLL
         GetMainDll();
-        
+
         SimpleLogger.Info("your proj dependency dll: ");
         foreach (var dll in DepDllList)
         {
@@ -161,6 +163,7 @@ public class ExecMerge
         SimpleLogger.Info("starting il-repack process...");
 
         var argumentsStr = ToolPath + " /out:" + OutputPath;
+        argumentsStr += " /lib:" + _binPath;
         argumentsStr = DepDllList.Aggregate(argumentsStr,
             (current, dll) => current + " " + dll);
         RunDotnetCommand(argumentsStr);
