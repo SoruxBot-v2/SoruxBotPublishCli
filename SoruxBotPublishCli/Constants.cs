@@ -2,6 +2,6 @@
 
 public static class Constants
 {
-    public const string OutputDllPrefix = "SoruxBot";
+    public const string OutputDllPrefix = "";
     
 }

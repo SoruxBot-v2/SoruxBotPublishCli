@@ -1,5 +1,7 @@
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Locator;
+using System.Reflection;
+using SoruxBot.SDK.Plugins.Basic;
 
 namespace SoruxBotPublishCli;
 
@@ -37,14 +39,20 @@ public static class DllGetter
                 userProfile, ".nuget", "packages", packageName, packageVersion);
 
             if (!Directory.Exists(nugetPackagePath)) continue;
-            
-            // 如果目录存在，查找其中符合条件的 DLL 文件
-            var dllFiles = 
-                Directory.GetFiles(nugetPackagePath, 
-                    "*.dll", SearchOption.AllDirectories)
-                    .Where(t => t.Contains("net6.0") || t.Contains("net8.0")||t.Contains("netstandard"))
-                    .Where(t=>t.Contains("lib"))
-                    .ToList();
+			
+			// 如果目录存在，查找其中符合条件的 DLL 文件，并排除插件类库
+			var dllFiles =
+				Directory.GetFiles(nugetPackagePath,
+					"*.dll", SearchOption.AllDirectories)
+					.Where(t => t.Contains("net6.0") || t.Contains("net8.0") || t.Contains("netstandard"))
+					.Where(t => t.Contains("lib"))
+					.Where(t =>
+						Assembly.LoadFile(t)
+						.GetExportedTypes()
+						.FirstOrDefault(p => 
+							p.BaseType?.FullName == typeof(SoruxBotLib).FullName) == null
+					).ToList();
+
             
             // Console.WriteLine(dllFiles.Count);
             // foreach (var dllFile in dllFiles)
