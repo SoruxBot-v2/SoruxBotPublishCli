@@ -52,7 +52,7 @@ public class ExecMerge
 
         if (DotnetPath == null)
         {
-            SimpleLogger.Warning("SORUX_DOTNET_PATH is not set, using default value.");
+            SimpleLogger.Warning("SORUX_DOTNET_PATH is not set, using default value `dotnet`.");
             DotnetPath = "dotnet";
         }
 
